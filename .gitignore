@@ -1,0 +1,16 @@
+# ROMs & saves
+*.gb
+*.gba
+*.gbc
+*.nds
+*.sav
+
+# Test data
+dev/test_roms/
+
+# Python
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/

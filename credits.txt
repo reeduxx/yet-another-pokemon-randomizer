@@ -1,0 +1,6 @@
+Character encoding - Bulbapedia (https://bulbapedia.bulbagarden.net/wiki/Character_encoding)
+Gen 1 offsets - DataCrystal (https://datacrystal.tcrf.net/wiki/Pok%C3%A9mon_Red_and_Blue/ROM_map)
+Spinda icon - Bulbapedia, uploaded by Sucoleo (https://archives.bulbagarden.net/media/upload/b/b3/Shuffle327.png)
+
+Tools Used
+HexManiacAdvance by haven1433 - https://github.com/haven1433/HexManiacAdvance

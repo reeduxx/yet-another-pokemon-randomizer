@@ -1,4 +1,4 @@
-from games.base import ROMMetadata
+from src.games.base import ROMMetadata
 
 
 class ROM:

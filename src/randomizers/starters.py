@@ -1,7 +1,7 @@
 import random
-from data.species.base import read_species_record
-from core.text import encode_gen3_text, write_gen3_text_smart
-from core.util import read_u8, read_u16_le, write_u8, write_u16_le
+from src.data.species.base import read_species_record
+from src.core.text import encode_gen3_text, write_gen3_text_smart
+from src.core.util import read_u8, read_u16_le, write_u8, write_u16_le
 
 
 def read_starters(rom, game) -> list[int]:

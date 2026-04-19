@@ -1,5 +1,5 @@
-from games.gen1.base import Gen1GameDefinition
-from games.gen1.constants import (
+from src.games.gen1.base import Gen1GameDefinition
+from src.games.gen1.constants import (
     RB_INTL_SPECIES_NAME_TABLE_OFFSET,
     BLUE_JP_SPECIES_NAME_TABLE_OFFSET,
     RB_INTL_TITLE_SCREEN_FIRST_MON_OFFSET,

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from games.base import GameDefinition, ROMMetadata
+from src.games.base import GameDefinition, ROMMetadata
 
 POKEMON_INTERNAL_IDS = (
     0x99,  # BULBASAUR

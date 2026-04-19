@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 from pathlib import Path
-from games.registry import detect_game
-from core.rom import ROM
-from randomizers.intro import (
+from src.games.registry import detect_game
+from src.core.rom import ROM
+from src.randomizers.intro import (
     randomize_intro_mon,
     randomize_starting_pc_item,
     randomize_starting_money,
 )
-from randomizers.starters import randomize_starters
-from randomizers.titlescreen import randomize_title_screen_mons
+from src.randomizers.starters import randomize_starters
+from src.randomizers.titlescreen import randomize_title_screen_mons
 
 
 @dataclass

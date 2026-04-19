@@ -15,21 +15,21 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-from services.randomizer_service import (
+from src.services.randomizer_service import (
     RandomizerSettings,
     detect_rom_file,
     randomize_rom_file,
 )
-from ui.tabs.intro_tab import IntroTab
-from ui.tabs.starters_tab import StartersTab
-from core.util import resolve_range
+from src.ui.tabs.intro_tab import IntroTab
+from src.ui.tabs.starters_tab import StartersTab
+from src.core.util import resolve_range
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Yet Another Pokémon Randomizer")
-        self.setWindowIcon(QIcon("assets/icon.png"))
+        self.setWindowIcon(QIcon("src/assets/icon.png"))
         self.resize(900, 600)
         self._create_widgets()
         self._build_ui()

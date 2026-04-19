@@ -1,5 +1,5 @@
 import random
-from core.util import write_u8
+from src.core.util import write_u8
 
 
 def randomize_title_screen_mons(rom, game, all=False, seed=None) -> None:

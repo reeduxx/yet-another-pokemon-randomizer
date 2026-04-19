@@ -1,5 +1,5 @@
-from games.gen1.base import Gen1GameDefinition
-from games.gen1.constants import (
+from src.games.gen1.base import Gen1GameDefinition
+from src.games.gen1.constants import (
     YELLOW_INTL_SPECIES_NAME_TABLE_OFFSET,
     YELLOW_JP_SPECIES_NAME_TABLE_OFFSET,
     INTL_STARTING_MONEY_PATCH_OFFSET,

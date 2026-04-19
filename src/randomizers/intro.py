@@ -1,6 +1,6 @@
 import random
-from data.items.items import get_item_table
-from core.util import (
+from src.data.items.items import get_item_table
+from src.core.util import (
     write_u8,
     write_u16_le,
     write_u32_le,

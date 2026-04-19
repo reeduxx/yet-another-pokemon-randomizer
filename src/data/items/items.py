@@ -1,6 +1,6 @@
-from data.items.items_gen1 import ITEMS_BY_ID as GEN1_ITEMS_BY_ID
-from data.items.items_gen2 import ITEMS_BY_ID as GEN2_ITEMS_BY_ID
-from data.items.items_gen3 import ITEMS_BY_ID as GEN3_ITEMS_BY_ID
+from src.data.items.items_gen1 import ITEMS_BY_ID as GEN1_ITEMS_BY_ID
+from src.data.items.items_gen2 import ITEMS_BY_ID as GEN2_ITEMS_BY_ID
+from src.data.items.items_gen3 import ITEMS_BY_ID as GEN3_ITEMS_BY_ID
 
 ITEMS_BY_GEN = {
     1: GEN1_ITEMS_BY_ID,

@@ -1,4 +1,9 @@
-from core.util import read_pointer, write_pointer, write_bytes_padded, find_free_space
+from src.core.util import (
+    read_pointer,
+    write_pointer,
+    write_bytes_padded,
+    find_free_space,
+)
 
 GEN1_ENG_ENCODE_MAP = {
     "‘": 0x70,

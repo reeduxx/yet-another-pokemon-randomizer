@@ -10,7 +10,24 @@ dev/test_roms/
 
 # Python
 __pycache__/
+*.log
 *.pyc
+*.pyd
+*.pyo
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# PyInstaller
+build/
+dist/
+*.spec
 
 # VS Code
 .vscode/
+
+# OS
+.DS_Store
+Thumbs.db

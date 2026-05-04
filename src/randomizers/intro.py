@@ -57,16 +57,23 @@ def randomize_starting_pc_item(rom, game, seed=None) -> None:
 
 def randomize_starting_money(rom, game, settings) -> None:
     rng = random.Random(settings.seed)
+    default_max = (
+        9900
+        if game.generation == 1 and not settings.patch_starting_money_limit
+        else 999999
+    )
     min_money, max_money = resolve_range(
         default_min=0,
-        default_max=999999,
+        default_max=default_max,
         user_min=settings.starting_money_min,
         user_max=settings.starting_money_max,
     )
-    money = rng.randint(min_money, max_money)
+    money = rng.randrange(min_money, max_money + 1, 100)
 
     if game.generation == 1:
-        randomize_gen1_starting_money(rom, game, money)
+        randomize_gen1_starting_money(
+            rom, game, money, patch=settings.patch_starting_money_limit
+        )
         return
     if getattr(game, "starting_money_offset", None) is None:
         return
@@ -74,7 +81,13 @@ def randomize_starting_money(rom, game, settings) -> None:
     write_u32_le(rom.data, game.starting_money_offset, money)
 
 
-def randomize_gen1_starting_money(rom, game, money: int) -> None:
+def randomize_gen1_starting_money(rom, game, money: int, patch: bool = False) -> None:
+    if money < 0 or money > 999999:
+        raise ValueError("Starting money must be between 0 and 999999.")
+    if not patch and money > 9900:
+        raise ValueError(
+            "Gen 1 starting money is limited to 9900 unless the expanded money patch is enabled."
+        )
     if (
         money <= 9900
         and money % 100 == 0
@@ -83,6 +96,8 @@ def randomize_gen1_starting_money(rom, game, money: int) -> None:
         middle_bcd_byte = int_to_bcd_3bytes(money)[1]
         write_u8(rom.data, game.starting_money_middle_byte_offset, middle_bcd_byte)
         return
+    if not patch:
+        raise ValueError("This starting money value requires the expanded money patch.")
     if getattr(game, "starting_money_patch_offset", None) is None:
         raise ValueError(
             f"{game.name} requires a full starting money patch for {money}, "

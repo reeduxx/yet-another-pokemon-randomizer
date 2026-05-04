@@ -33,3 +33,5 @@ def randomize_title_screen_mons(rom, game, all=False, seed=None) -> None:
 
         for i, species_id in enumerate(mon_list):
             write_u8(rom.data, game.title_screen_mon_list_offset + i, species_id)
+    else:
+        write_u8(rom.data, game.title_screen_mon_list_offset, first_mon)

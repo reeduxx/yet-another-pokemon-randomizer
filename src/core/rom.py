@@ -48,7 +48,7 @@ class ROM:
         return ROMMetadata(
             size=len(self.data),
             title=self.get_title(),
-            game_code=self.game_code() if self.get_rom_code() else None,
+            game_code=self.get_game_code() if self.get_rom_code() else None,
             language_code=self.get_language_code() if self.get_rom_code() else None,
             version_byte=self.get_version_byte(),
             header_checksum=self.get_header_checksum(),

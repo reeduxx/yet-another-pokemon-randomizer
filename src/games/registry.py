@@ -1,21 +1,21 @@
-from src.games.gen1.blue import BLUE_VERSIONS
-from src.games.gen1.green import GREEN_VERSIONS
-from src.games.gen1.red import RED_VERSIONS
-from src.games.gen1.yellow import YELLOW_VERSIONS
-
-SUPPORTED_GAMES = [
-    *RED_VERSIONS,
-    *GREEN_VERSIONS,
-    *BLUE_VERSIONS,
-    *YELLOW_VERSIONS,
-]
+from pathlib import Path
+from src.games.definitions.factory import DefinitionFactory
+from src.games.definitions.loader import DefinitionLoader
 
 
-def detect_game(rom) -> object | None:
-    metadata = rom.get_metadata()
+class GameRegistry:
+    def __init__(self):
+        self.loader = DefinitionLoader()
+        self.factory = DefinitionFactory()
+        self.games = []
 
-    for game in SUPPORTED_GAMES:
-        if game.matches(metadata):
-            return game
+    def load_definitions(self, directory: str | Path) -> None:
+        definitions = self.loader.load_directory(directory)
+        self.games = [self.factory.create(definition) for definition in definitions]
 
-    return None
+    def detect_game(self, metadata):
+        for game in self.games:
+            if game.matches(metadata):
+                return game
+
+        return None

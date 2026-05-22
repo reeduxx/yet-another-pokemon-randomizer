@@ -1,3 +1,5 @@
+"""ROM definition validation utilities."""
+
 from typing import Any
 
 
@@ -6,13 +8,15 @@ class DefinitionValidationError(Exception):
 
 
 class DefinitionValidator:
-    REQUIRED_TOP_LEVEL_KEYS = {
+    """Validate loaded ROM definition data."""
+
+    REQUIRED_TOP_LEVEL_KEYS = {  # Required top-level ROM definition keys.
         "version",
         "generation",
         "metadata",
         "offsets",
     }
-    REQUIRED_METADATA_KEYS = {
+    REQUIRED_METADATA_KEYS = {  # Required ROM metadata keys.
         "name",
         "internal_title",
         "language_code",
@@ -20,11 +24,20 @@ class DefinitionValidator:
     }
 
     def validate(self, definition: dict[str, Any]) -> None:
+        """Validate a ROM definition dictionary.
+
+        Args:
+            definition: ROM definition dictionary to validate.
+
+        Raises:
+            DefinitionValidationError: If the definition is invalid.
+        """
         self._validate_top_level(definition)
         self._validate_metadata(definition["metadata"])
         self._validate_offsets(definition["offsets"])
 
     def _validate_top_level(self, definition: dict[str, Any]) -> None:
+        """Validate top-level definition structure."""
         missing = self.REQUIRED_TOP_LEVEL_KEYS - definition.keys()
 
         if missing:
@@ -38,6 +51,7 @@ class DefinitionValidator:
             )
 
     def _validate_metadata(self, metadata: dict[str, Any]) -> None:
+        """Validate ROM metadata fields."""
         missing = self.REQUIRED_METADATA_KEYS - metadata.keys()
 
         if missing:
@@ -46,6 +60,7 @@ class DefinitionValidator:
             )
 
     def _validate_offsets(self, offsets: dict[str, Any]) -> None:
+        """Validate ROM offset values."""
         for key, value in offsets.items():
             if isinstance(value, list):
                 if not all(isinstance(item, int) for item in value):

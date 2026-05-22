@@ -1,3 +1,5 @@
+"""Intro randomization settings tab."""
+
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (
@@ -12,12 +14,14 @@ from PySide6.QtWidgets import (
 )
 from superqt import QRangeSlider
 
-GB_MONEY_MAX = 9900
-MONEY_MAX = 999999
-MONEY_STEP = 100
+GB_MONEY_MAX = 9900  # Maximum starting money for unpatched Game Boy titles.
+MONEY_MAX = 999999  # Maximum starting money supported by the randomizer.
+MONEY_STEP = 100  # Increment step used by the money range slider.
 
 
 class IntroTab(QWidget):
+    """Tab containing intro and starting-state randomization settings."""
+
     def __init__(self):
         super().__init__()
         self.is_gameboy_game = False
@@ -108,6 +112,7 @@ class IntroTab(QWidget):
         layout.addStretch()
 
     def _connect_signals(self):
+        """Connect widget signals and initialize dependent UI state."""
         self.randomize_title_screen_mon_checkbox.toggled.connect(
             self._update_title_screen_mon_enabled
         )
@@ -127,6 +132,14 @@ class IntroTab(QWidget):
         self._update_money_enabled(self.randomize_starting_money_checkbox.isChecked())
 
     def _snap_money_value(self, value: int) -> int:
+        """Clamp and round a money value to the configured slider step.
+
+        Args:
+            value: Money value to normalize.
+
+        Returns:
+            Clamped and rounded money value.
+        """
         value = max(0, min(value, self.current_money_max))
         return round(value / MONEY_STEP) * MONEY_STEP
 
@@ -182,6 +195,7 @@ class IntroTab(QWidget):
         self.slider.setEnabled(checked)
 
     def _update_money_range_for_game(self) -> None:
+        """Update money limits, validators, and slider ranges for the detected game."""
         if self.is_gameboy_game and not self.patch_starting_money_checkbox.isChecked():
             max_money = GB_MONEY_MAX
         else:
@@ -201,6 +215,11 @@ class IntroTab(QWidget):
         self._on_slider_changed()
 
     def get_settings_patch(self) -> dict:
+        """Return the settings contributed by this tab.
+
+        Returns:
+            Dictionary containing intro randomization settings.
+        """
         title_screen_mon_enabled = self.randomize_title_screen_mon_checkbox.isChecked()
         money_enabled = self.randomize_starting_money_checkbox.isChecked()
         min_val, max_val = self.slider.value()
@@ -221,5 +240,10 @@ class IntroTab(QWidget):
         }
 
     def set_gameboy_game(self, is_gameboy_game: bool) -> None:
+        """Configure the tab for Game Boy-specific money limitations.
+
+        Args:
+            is_gameboy_game: Whether the detected game is a Game Boy title.
+        """
         self.is_gameboy_game = is_gameboy_game
         self._update_money_range_for_game()

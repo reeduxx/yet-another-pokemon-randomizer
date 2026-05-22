@@ -1,3 +1,5 @@
+"""Starter randomization settings tab."""
+
 from PySide6.QtWidgets import (
     QCheckBox,
     QGroupBox,
@@ -7,6 +9,8 @@ from PySide6.QtWidgets import (
 
 
 class StartersTab(QWidget):
+    """Tab containing starter randomization settings."""
+
     def __init__(self):
         super().__init__()
         self._create_widgets()
@@ -39,14 +43,25 @@ class StartersTab(QWidget):
         layout.addStretch()
 
     def _connect_signals(self):
+        """Connect widget signals and initialize dependent UI state."""
         self.randomize_starters_checkbox.toggled.connect(self._update_enabled)
         self._update_enabled(self.randomize_starters_checkbox.isChecked())
 
     def _update_enabled(self, checked: bool):
+        """Enable/disable dependent starter options.
+
+        Args:
+            checked: Whether starter randomization is enabled.
+        """
         self.synchronize_rival_starter_checkbox.setEnabled(checked)
         self.correct_oak_starter_text_checkbox.setEnabled(checked)
 
     def get_settings_patch(self) -> dict:
+        """Return the settings contributed by this tab.
+
+        Returns:
+            Dictionary containing starter randomization settings.
+        """
         starters_enabled = self.randomize_starters_checkbox.isChecked()
 
         return {

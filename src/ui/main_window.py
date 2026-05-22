@@ -1,3 +1,5 @@
+"""Main application window for the randomizer GUI."""
+
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QFileDialog,
@@ -34,6 +36,8 @@ ROM_FILE_FILTER = (
 
 
 class MainWindow(QMainWindow):
+    """Main PySide6 window for ROM selection, settings, and randomization."""
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Yet Another Pokémon Randomizer")
@@ -125,6 +129,7 @@ class MainWindow(QMainWindow):
             self._detect_rom()
 
     def _detect_rom(self):
+        """Detect the selected ROM and update ROM-dependent UI state."""
         rom_path = self.actions_panel.rom_path()
 
         if not rom_path:
@@ -147,6 +152,14 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage("ROM detected successfully")
 
     def _build_settings(self) -> RandomizerSettings:
+        """Build randomizer settings from the current UI state.
+
+        Returns:
+            RandomizerSettings populated from all tabs and action panel inputs.
+
+        Raises:
+            ValueError: If the seed is not a whole number.
+        """
         data = {}
 
         for tab in self.randomizer_tabs:
@@ -163,6 +176,7 @@ class MainWindow(QMainWindow):
         return RandomizerSettings(**data)
 
     def _randomize_rom(self):
+        """Validate settings, randomize the selected ROM, and report the result."""
         rom_path = self.actions_panel.rom_path()
 
         if not rom_path:
@@ -189,6 +203,11 @@ class MainWindow(QMainWindow):
         )
 
     def _set_randomizer_controls_enabled(self, enabled: bool) -> None:
+        """Enable/disable controls that require a detected ROM.
+
+        Args:
+            enabled: Whether ROM-dependent controls should be enabled.
+        """
         for tab in self.randomizer_tabs:
             tab.setEnabled(enabled)
 
@@ -200,6 +219,7 @@ class MainWindow(QMainWindow):
         self.randomize_button.setEnabled(enabled)
 
     def _clear_rom_state(self) -> None:
+        """Clear ROM-specific UI state and disable randomizer controls."""
         self.actions_panel.clear_rom_path()
         self.rom_panel.clear()
         self._set_randomizer_controls_enabled(False)

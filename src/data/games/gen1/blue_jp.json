@@ -1,0 +1,39 @@
+{
+    "version": 1,
+    "generation": 1,
+    "metadata": {
+        "name": "ポケットモンスター 青",
+        "internal_title": "POKEMON BLUE",
+        "language_code": "J",
+        "revision": "v1.0",
+        "version_byte": "0x00",
+        "header_checksum": "0xE5",
+        "global_checksum": "0xDC36"
+    },
+    "offsets": {
+        "species_name_table_offset": "0x39446",
+        "title_screen_first_mon_offset": "0x43A6",
+        "title_screen_mon_list_offset": "0x4592",
+        "intro_mon_offset": "0x60C4",
+        "starting_money_wram_offset": "0xD2CB",
+        "starting_money_routine_offset": "0xFBD1",
+        "starting_money_middle_byte_offset": "0xFBD5",
+        "starting_money_patch_offset": "",
+        "starting_money_return_offset": "0xF8DB",
+        "starting_pc_item_offset": "0x608B",
+        "player_starter_offsets": [
+            "0x1CBA7",
+            "0x1CBB8",
+            "0x1CBC9"
+        ],
+        "rival_starter_offsets": [
+            "0x3A556",
+            "0x3A559",
+            "0x3A55C"
+        ],
+        "pokedex_owned_wram_offset": "0xD27B",
+        "show_pokedex_data_routine_offset": "0x3EB1",
+        "starter_dex_preview_routine_offset": "0x5C0DC",
+        "starter_dex_preview_patch_offset": ""
+    }
+}

@@ -1,8 +1,25 @@
+"""Title screen Pokémon randomization utilities."""
+
 import random
+from src.core.rom import ROM
 from src.core.util import write_u8
+from src.games.base import GameDefinition
 
 
-def randomize_title_screen_mons(rom, game, all=False, seed=None) -> None:
+def randomize_title_screen_mons(
+    rom: ROM, game: GameDefinition, randomize_all=False, seed=None
+) -> None:
+    """Randomize title screen Pokémon.
+
+    Args:
+        rom: Loaded ROM instance.
+        game: Detected game definition.
+        randomize_all: Whether to randomize the entire title screen list.
+        seed: Optional RNG seed.
+
+    Raises:
+        ValueError: If required offsets are missing or insufficient species exist.
+    """
     if game.title_screen_first_mon_offset is None:
         raise ValueError(
             f"{game.name} does not define a title screen first Pokémon offset"
@@ -24,10 +41,9 @@ def randomize_title_screen_mons(rom, game, all=False, seed=None) -> None:
     first_mon = rng.choice(valid_ids)
     write_u8(rom.data, game.title_screen_first_mon_offset, first_mon)
 
-    if all:
-        remaining_choices = [
-            species_id for species_id in valid_ids if species_id != first_mon
-        ]
+    if randomize_all:
+        remaining_choices = valid_ids.copy()
+        remaining_choices.remove(first_mon)
         other_mons = rng.sample(remaining_choices, list_length - 1)
         mon_list = [first_mon] + other_mons
 

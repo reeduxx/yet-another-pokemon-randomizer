@@ -1,4 +1,7 @@
+"""ROM definition factory utilities."""
+
 from typing import Any
+from src.games.base import GameDefinition
 from src.games.gen1.base import Gen1GameDefinition
 
 
@@ -7,7 +10,20 @@ class DefinitionFactoryError(Exception):
 
 
 class DefinitionFactory:
-    def create(self, definition: dict[str, Any]):
+    """Create GameDefinition objects from loaded definition dictionaries."""
+
+    def create(self, definition: dict[str, Any]) -> GameDefinition:
+        """Create a game definition object from loaded definition data.
+
+        Args:
+            definition: Loaded and validated ROM definition dictionary.
+
+        Returns:
+            Game definition instance for the requested generation.
+
+        Raises:
+            DefinitionFactoryError: If the generation is unsupported.
+        """
         metadata = definition["metadata"]
         offsets = definition["offsets"]
         generation = definition["generation"]

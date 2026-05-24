@@ -192,7 +192,7 @@ class Gen1GameDefinition(GameDefinition):
     starter_dex_preview_routine_offset: int | None = None
     starter_dex_preview_patch_offset: int | None = None
 
-    def get_species_ids(self) -> list[int]:
+    def get_species_ids(self) -> tuple[int, ...]:
         """Return all valid Generation 1 internal species IDs."""
         return POKEMON_INTERNAL_IDS
 

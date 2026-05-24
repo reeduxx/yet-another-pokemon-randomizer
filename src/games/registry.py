@@ -15,13 +15,20 @@ class GameRegistry:
         self.factory = DefinitionFactory()
         self.games: list[GameDefinition] = []
 
-    def load_definitions(self, directory: str | Path) -> None:
-        """Load all game definitions from a directory.
+    def load_definitions(
+        self, app_directory: str | Path, user_directory: str | Path | None = None
+    ) -> None:
+        """Load built-in and optional user game definitions.
 
         Args:
-            directory: Directory containing ROM definition files.
+            app_directory: Directory containing bundled ROM definition files.
+            user_directory: Optional directory containing user ROM definition files.
         """
-        definitions = self.loader.load_directory(directory)
+        definitions = self.loader.load_directory(app_directory)
+
+        if user_directory is not None and Path(user_directory).exists():
+            definitions.extend(self.loader.load_directory(user_directory))
+
         self.games = [self.factory.create(definition) for definition in definitions]
 
     def detect_game(self, metadata: ROMMetadata) -> GameDefinition | None:

@@ -2,9 +2,7 @@
 
 import random
 from src.core.rom import ROM
-from src.core.text import encode_gen3_text, write_gen3_text_smart
 from src.core.util import read_u8, read_u16_le, write_u8, write_u16_le
-from src.data.species.base import read_species_record
 from src.games.base import GameDefinition
 
 
@@ -60,6 +58,7 @@ def randomize_starters(
     return starters
 
 
+""" TODO: Fix implementation
 def update_starter_choice_texts(
     rom: ROM, game: GameDefinition, starter_species_ids: list[int]
 ) -> None:
@@ -85,6 +84,7 @@ def build_starter_choice_text(
     if starter == 2:
         return f"Hm! {species_name} is your choice.{{NL}}It’s one worth raising.{{PAGE}}So, {{PLAYER}}, you’ve decided on the{{NL}}{species_type} POKéMON {species_name}?"
     raise ValueError(f"Invalid starter index: {starter}")
+"""
 
 
 def _read_gen1_starters(rom: ROM, game: GameDefinition) -> list[int]:

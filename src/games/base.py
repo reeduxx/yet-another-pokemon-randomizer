@@ -4,7 +4,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-# Mapping of ROM langauge codes to display names.
+# Mapping of ROM language codes to display names.
 LANGUAGE_NAMES = {
     "D": "German",
     "E": "English",
@@ -53,8 +53,11 @@ class GameDefinition(ABC):
     rival_starter_offsets: list[int] | None = None
 
     @abstractmethod
-    def get_species_ids(self):
+    def get_species_ids(self) -> tuple[int, ...]:
         """Return valid species IDs for this game.
+
+        Returns:
+            List of valid species IDs.
 
         Raises:
             NotImplementedError: If a subclass does not implement this method.

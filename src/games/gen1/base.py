@@ -1,6 +1,9 @@
+"""Generation 1 game definition and species mapping utilities."""
+
 from dataclasses import dataclass
 from src.games.base import GameDefinition, ROMMetadata
 
+# Pokémon species internal IDs in Pokédex order.
 POKEMON_INTERNAL_IDS = (
     0x99,  # BULBASAUR
     0x09,  # IVYSAUR
@@ -155,11 +158,13 @@ POKEMON_INTERNAL_IDS = (
     0x15,  # MEW
 )
 
+# Mapping of Gen 1 internal species IDs to Pokédex numbers.
 INTERNAL_ID_TO_DEX_NUM = {
     internal_id: dex_num
     for dex_num, internal_id in enumerate(POKEMON_INTERNAL_IDS, start=1)
 }
 
+# Mapping of Pokédex numbers to Gen 1 internal species IDs.
 DEX_NUM_TO_INTERNAL_ID = {
     dex_num: internal_id
     for dex_num, internal_id in enumerate(POKEMON_INTERNAL_IDS, start=1)
@@ -168,10 +173,12 @@ DEX_NUM_TO_INTERNAL_ID = {
 
 @dataclass(slots=True)
 class Gen1GameDefinition(GameDefinition):
+    """Game definition implementation for Generation 1 Pokémon games."""
+
     version_byte: int | None = None
     header_checksum: int | None = None
     global_checksum: int | None = None
-    species_info_table_offset = 0x383DE
+    species_info_table_offset: int = 0x383DE
     title_screen_first_mon_offset: int | None = None
     title_screen_mon_list_offset: int | None = None
     intro_mon_offset: int | None = None
@@ -185,10 +192,22 @@ class Gen1GameDefinition(GameDefinition):
     starter_dex_preview_routine_offset: int | None = None
     starter_dex_preview_patch_offset: int | None = None
 
-    def get_species_ids(self) -> list[int]:
+    def get_species_ids(self) -> tuple[int, ...]:
+        """Return all valid Generation 1 internal species IDs."""
         return POKEMON_INTERNAL_IDS
 
     def internal_id_to_dex_num(self, species_id: int) -> int:
+        """Convert a Gen 1 internal species ID to a Pokédex number.
+
+        Args:
+            species_id: Internal species ID.
+
+        Returns:
+            Corresponding Pokédex number.
+
+        Raises:
+            ValueError: If the species ID is unknown.
+        """
         try:
             return INTERNAL_ID_TO_DEX_NUM[species_id]
         except KeyError as e:
@@ -197,12 +216,31 @@ class Gen1GameDefinition(GameDefinition):
             ) from e
 
     def dex_num_to_internal_id(self, dex_num: int) -> int:
+        """Convert a Pokédex number to a Gen 1 internal species ID.
+
+        Args:
+            dex_num: Pokédex number.
+
+        Returns:
+            Corresponding internal species ID.
+
+        Raises:
+            ValueError: If the Pokédex number is unknown.
+        """
         try:
             return DEX_NUM_TO_INTERNAL_ID[dex_num]
         except KeyError as e:
             raise ValueError(f"Unknown Gen 1 Pokédex number: {dex_num}") from e
 
     def matches(self, rom_metadata: ROMMetadata) -> bool:
+        """Determine whether ROM metadata matches this game definition.
+
+        Args:
+            rom_metadata: ROM metadata to compare.
+
+        Returns:
+            True if the ROM matches the definition, else False.
+        """
         if rom_metadata.title is None:
             return False
 

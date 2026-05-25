@@ -1,4 +1,6 @@
-from PySide6.QtGui import QAction, QIcon
+"""Main application window for the randomizer GUI."""
+
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
@@ -15,6 +17,7 @@ from src.services.randomizer_service import (
     detect_rom_file,
     randomize_rom_file,
 )
+from src.ui.menu_bar import MenuBar
 from src.ui.panels.actions_panel import ActionsPanel
 from src.ui.panels.rom_panel import RomPanel
 from src.ui.tabs.intro_tab import IntroTab
@@ -33,6 +36,8 @@ ROM_FILE_FILTER = (
 
 
 class MainWindow(QMainWindow):
+    """Main PySide6 window for ROM selection, settings, and randomization."""
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Yet Another Pokémon Randomizer")
@@ -54,31 +59,8 @@ class MainWindow(QMainWindow):
         self.tabs = QTabWidget()
 
     def _create_menu_bar(self):
-        menu_bar = self.menuBar()
-        file_menu = menu_bar.addMenu("&File")
-        self.open_rom_action = QAction("Open ROM...", self)
-        self.open_rom_action.setShortcut("Ctrl+O")
-        file_menu.addAction(self.open_rom_action)
-
-        self.randomize_action = QAction("Randomize ROM", self)
-        self.randomize_action.setShortcut("Ctrl+R")
-        file_menu.addAction(self.randomize_action)
-
-        file_menu.addSeparator()
-
-        self.exit_action = QAction("Exit", self)
-        file_menu.addAction(self.exit_action)
-
-        settings_menu = menu_bar.addMenu("&Settings")
-        self.export_settings_action = QAction("Export Settings", self)
-        settings_menu.addAction(self.export_settings_action)
-
-        self.import_settings_action = QAction("Import Settings", self)
-        settings_menu.addAction(self.import_settings_action)
-
-        help_menu = menu_bar.addMenu("&Help")
-        self.about_action = QAction("About", self)
-        help_menu.addAction(self.about_action)
+        self.menu_bar = MenuBar(self)
+        self.setMenuBar(self.menu_bar)
 
     def _build_ui(self):
         central = QWidget()
@@ -128,9 +110,9 @@ class MainWindow(QMainWindow):
         root_layout.addLayout(button_row)
 
     def _connect_signals(self):
-        self.open_rom_action.triggered.connect(self._browse_for_rom)
-        self.randomize_action.triggered.connect(self._randomize_rom)
-        self.exit_action.triggered.connect(self.close)
+        self.menu_bar.open_rom_action.triggered.connect(self._browse_for_rom)
+        self.menu_bar.randomize_action.triggered.connect(self._randomize_rom)
+        self.menu_bar.exit_action.triggered.connect(self.close)
         self.actions_panel.browse_button.clicked.connect(self._browse_for_rom)
         self.randomize_button.clicked.connect(self._randomize_rom)
 
@@ -147,6 +129,7 @@ class MainWindow(QMainWindow):
             self._detect_rom()
 
     def _detect_rom(self):
+        """Detect the selected ROM and update ROM-dependent UI state."""
         rom_path = self.actions_panel.rom_path()
 
         if not rom_path:
@@ -169,6 +152,14 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage("ROM detected successfully")
 
     def _build_settings(self) -> RandomizerSettings:
+        """Build randomizer settings from the current UI state.
+
+        Returns:
+            RandomizerSettings populated from all tabs and action panel inputs.
+
+        Raises:
+            ValueError: If the seed is not a whole number.
+        """
         data = {}
 
         for tab in self.randomizer_tabs:
@@ -185,6 +176,7 @@ class MainWindow(QMainWindow):
         return RandomizerSettings(**data)
 
     def _randomize_rom(self):
+        """Validate settings, randomize the selected ROM, and report the result."""
         rom_path = self.actions_panel.rom_path()
 
         if not rom_path:
@@ -211,17 +203,23 @@ class MainWindow(QMainWindow):
         )
 
     def _set_randomizer_controls_enabled(self, enabled: bool) -> None:
+        """Enable/disable controls that require a detected ROM.
+
+        Args:
+            enabled: Whether ROM-dependent controls should be enabled.
+        """
         for tab in self.randomizer_tabs:
             tab.setEnabled(enabled)
 
-        self.randomize_action.setEnabled(enabled)
-        self.export_settings_action.setEnabled(enabled)
-        self.import_settings_action.setEnabled(enabled)
+        self.menu_bar.randomize_action.setEnabled(enabled)
+        self.menu_bar.export_settings_action.setEnabled(enabled)
+        self.menu_bar.import_settings_action.setEnabled(enabled)
         self.export_settings_button.setEnabled(enabled)
         self.reset_settings_button.setEnabled(enabled)
         self.randomize_button.setEnabled(enabled)
 
     def _clear_rom_state(self) -> None:
+        """Clear ROM-specific UI state and disable randomizer controls."""
         self.actions_panel.clear_rom_path()
         self.rom_panel.clear()
         self._set_randomizer_controls_enabled(False)

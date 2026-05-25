@@ -1,0 +1,31 @@
+{
+    "version": 1,
+    "generation": 1,
+    "metadata": {
+        "name": "ポケットモンスター ピカチュウ",
+        "internal_title": "POKEMON YELLOW",
+        "language_code": "J",
+        "revision": "v1.3",
+        "version_byte": "0x03",
+        "header_checksum": "0x1D",
+        "global_checksum": "0xD984"
+    },
+    "offsets": {
+        "species_name_table_offset": "0x39462",
+        "title_screen_first_mon_offset": null,
+        "title_screen_mon_list_offset": null,
+        "intro_mon_offset": "0x5E3A",
+        "starting_money_wram_offset": "0xD2CB",
+        "starting_money_routine_offset": "0xFA08",
+        "starting_money_middle_byte_offset": "0xFA0C",
+        "starting_money_patch_offset": null,
+        "starting_money_return_offset": "0xFA12",
+        "starting_pc_item_offset": "0x5E01",
+        "player_starter_offsets": [],
+        "rival_starter_offsets": [],
+        "pokedex_owned_wram_offset": null,
+        "show_pokedex_data_routine_offset": null,
+        "starter_dex_preview_routine_offset": null,
+        "starter_dex_preview_patch_offset": null
+    }
+}

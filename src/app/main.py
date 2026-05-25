@@ -11,10 +11,10 @@ from src.ui.main_window import MainWindow
 
 def main() -> int:
     """
-    Starts the application and runs the event loop.
+    Start the application and run the Qt event loop.
 
     Returns:
-        int: The application exit code returned by Qt.
+        Application exit code returned by Qt.
     """
     app = QApplication(sys.argv)
     window = MainWindow()

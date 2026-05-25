@@ -1,4 +1,16 @@
+"""Binary data and ROM offset utility functions."""
+
+
 def read_u8(data: bytearray, offset: int) -> int:
+    """Read an unsigned 8-bit value.
+
+    Args:
+        data: Data buffer to read from.
+        offset: Offset to read from.
+
+    Returns:
+        Unsigned 8-bit value.
+    """
     return data[offset]
 
 
@@ -52,6 +64,18 @@ def write_pointer(data: bytearray, offset: int, value: int) -> None:
 def write_bytes_padded(
     data: bytearray, offset: int, values: bytes, total_length: int, pad_byte: int = 0xFF
 ) -> None:
+    """Write bytes and pad the remaining space.
+
+    Args:
+        data: Data buffer to write to.
+        offset: Offset to write at.
+        values: Bytes to write.
+        total_length: Total number of bytes to overwrite.
+        pad_byte: Byte used to fill unused space.
+
+    Raises:
+        ValueError: If values is longer than total_length.
+    """
     if len(values) > total_length:
         raise ValueError("Encoded text is longer than available space.")
 
@@ -64,29 +88,6 @@ def write_bytes_padded(
         )
 
 
-def find_free_space(
-    data: bytearray, length: int, start_offset: int = 0x700000, fill_byte: int = 0xFF
-) -> int:
-    run_start = -1
-    run_length = 0
-
-    for i in range(start_offset, len(data)):
-        if data[i] == fill_byte:
-            if run_start == -1:
-                run_start = i
-            run_length += 1
-
-            if run_length >= length:
-                return run_start
-        else:
-            run_start = -1
-            run_length = 0
-
-    raise ValueError(
-        f"Could not find {length} bytes of free space starting at 0x{start_offset:X}"
-    )
-
-
 def copy_bytes(data: bytearray, src: int, dst: int, length: int) -> None:
     data[dst : dst + length] = data[src : src + length]
 
@@ -97,6 +98,20 @@ def resolve_range(
     user_min: int | None,
     user_max: int | None,
 ) -> tuple[int, int]:
+    """Resolve and validate a user-provided integer range.
+
+    Args:
+        default_min: Minimum allowed value.
+        default_max: Maximum allowed value.
+        user_min: Optional user-provided minimum.
+        user_max: Optional user-provided maximum
+
+    Returns:
+        Resolved minimum and maximum values.
+
+    Raises:
+        ValueError: If the resolved minimum is greater than the resolved maximum.
+    """
     min_value = default_min if user_min is None else user_min
     max_value = default_max if user_max is None else user_max
 
@@ -115,6 +130,17 @@ def resolve_range(
 
 
 def int_to_bcd_3bytes(value: int) -> bytes:
+    """Convert an integer to a three-byte binary-coded decimal value.
+
+    Args:
+        value: Integer value to convert.
+
+    Returns:
+        Three-byte BCD representation.
+
+    Raises:
+        ValueError: If value is outside the supported range.
+    """
     if not 0 <= value <= 999_999:
         raise ValueError("Value must be between 0 and 999999.")
 
@@ -124,6 +150,14 @@ def int_to_bcd_3bytes(value: int) -> bytes:
 
 
 def rom_offset_to_gb_address(offset: int) -> int:
+    """Convert a ROM offset to a Game Boy banked address.
+
+    Args:
+        offset: Absolute ROM offset.
+
+    Returns:
+        Game Boy banked offset.
+    """
     bank = offset // 0x4000
     bank_offset = offset % 0x4000
 

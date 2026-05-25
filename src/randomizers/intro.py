@@ -1,5 +1,8 @@
+"""ROM randomization and patching utilities."""
+
 import random
 from src.data.items.items import get_item_table
+from src.core.rom import ROM
 from src.core.util import (
     write_u8,
     write_u16_le,
@@ -9,9 +12,17 @@ from src.core.util import (
     int_to_bcd_3bytes,
     rom_offset_to_gb_address,
 )
+from src.games.base import GameDefinition
 
 
-def randomize_intro_mon(rom, game, seed=None) -> None:
+def randomize_intro_mon(rom: ROM, game: GameDefinition, seed=None) -> None:
+    """Randomize the Pokémon shown during the game introduction.
+
+    Args:
+        rom: Loaded ROM instance.
+        game: Detected game definition.
+        seed: Optional RNG seed.
+    """
     if game.generation == 1:
         randomize_gen1_intro_mon(rom, game, seed)
     elif game.game_code in ["AXP", "AXV", "BPE"]:
@@ -20,7 +31,7 @@ def randomize_intro_mon(rom, game, seed=None) -> None:
         randomize_frlg_intro_mon(rom, game, seed)
 
 
-def randomize_gen1_intro_mon(rom, game, seed=None) -> None:
+def randomize_gen1_intro_mon(rom: ROM, game: GameDefinition, seed=None) -> None:
     rng = random.Random(seed)
 
     if getattr(game, "intro_mon_offset", None) is None:
@@ -30,7 +41,7 @@ def randomize_gen1_intro_mon(rom, game, seed=None) -> None:
     write_u8(rom.data, game.intro_mon_offset, intro_mon)
 
 
-def randomize_frlg_intro_mon(rom, game, seed=None) -> None:
+def randomize_frlg_intro_mon(rom: ROM, game: GameDefinition, seed=None) -> None:
     rng = random.Random(seed)
     mon = rng.randint(1, 250)
     write_u8(rom.data, game.intro_pokemon_offsets[0], mon)
@@ -45,7 +56,7 @@ def randomize_frlg_intro_mon(rom, game, seed=None) -> None:
     )
 
 
-def randomize_starting_pc_item(rom, game, seed=None) -> None:
+def randomize_starting_pc_item(rom: ROM, game: GameDefinition, seed=None) -> None:
     rng = random.Random(seed)
     item = rng.choice(list(get_item_table(game.generation).keys()))
 
@@ -55,7 +66,7 @@ def randomize_starting_pc_item(rom, game, seed=None) -> None:
         write_u16_le(rom.data, game.starting_pc_item_offset, item)
 
 
-def randomize_starting_money(rom, game, settings) -> None:
+def randomize_starting_money(rom: ROM, game: GameDefinition, settings) -> None:
     rng = random.Random(settings.seed)
     default_max = (
         9900
@@ -81,7 +92,20 @@ def randomize_starting_money(rom, game, settings) -> None:
     write_u32_le(rom.data, game.starting_money_offset, money)
 
 
-def randomize_gen1_starting_money(rom, game, money: int, patch: bool = False) -> None:
+def randomize_gen1_starting_money(
+    rom: ROM, game: GameDefinition, money: int, patch: bool = False
+) -> None:
+    """Apply Gen 1 starting money modifications.
+
+    Args:
+        rom: Loaded ROM instance.
+        game: Detected Generation 1 game definition.
+        money: Starting money value.
+        patch: Whether to apply the expanded money patch.
+
+    Raises:
+        ValueError: If the requested money value is invalid.
+    """
     if money < 0 or money > 999999:
         raise ValueError("Starting money must be between 0 and 999999.")
     if not patch and money > 9900:
@@ -107,7 +131,8 @@ def randomize_gen1_starting_money(rom, game, money: int, patch: bool = False) ->
     patch_gen1_starting_money_full(rom, game, money)
 
 
-def patch_gen1_starting_money_full(rom, game, money: int) -> None:
+def patch_gen1_starting_money_full(rom: ROM, game: GameDefinition, money: int) -> None:
+    """Patch the ROM to support expanded Gen 1 starting money values."""
     if getattr(game, "starting_money_wram_offset", None) is None:
         raise ValueError(f"{game.name} does not define starting_money_wram_offset.")
     if getattr(game, "starting_money_patch_offset", None) is None:
@@ -179,7 +204,10 @@ def patch_gen1_starting_money_full(rom, game, money: int) -> None:
     ] = patch
 
 
-def patch_starter_dex_preview(rom, game, owned_bytes: list[int]) -> None:
+def patch_starter_dex_preview(
+    rom: ROM, game: GameDefinition, owned_bytes: list[int]
+) -> None:
+    """Patch the starter Pokédex preview routine for randomized starters."""
     write_u8(rom.data, game.starter_dex_preview_routine_offset, 0xC3)  # jp
     write_u16_le(
         rom.data,

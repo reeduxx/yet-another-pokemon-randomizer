@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from src.games.registry import detect_game
+from src.games import registry
 from src.core.rom import ROM
 from src.core.util import resolve_range
 from src.randomizers.intro import (
@@ -74,7 +74,7 @@ class DetectionResult:
 
 def detect_rom_file(rom_path: str) -> DetectionResult:
     rom = ROM.load(rom_path)
-    game = detect_game(rom)
+    game = registry.detect_game(rom.get_metadata())
 
     if game is None:
         raise ValueError(f"Unsupported or unrecognized ROM (title: {rom.get_title()})")
@@ -98,7 +98,7 @@ def randomize_rom_file(
     input_path: str, settings: RandomizerSettings, output_path: str | None = None
 ) -> str:
     rom = ROM.load(input_path)
-    game = detect_game(rom)
+    game = registry.detect_game(rom.get_metadata())
 
     if game is None:
         raise ValueError(f"Unsupported or unrecognized ROM (title: {rom.get_title()})")

@@ -40,6 +40,26 @@ class Species:
     # Gens 1/2 store TM/HM learns in the species data
     tmhm_flags: bytes | None = None
 
+    @property
+    def bst(self) -> int:
+        """Return the base stat total for this species."""
+        if self.special is not None:
+            return self.hp + self.attack + self.defense + self.speed + self.special
+
+        return (
+            self.hp
+            + self.attack
+            + self.defense
+            + self.speed
+            + (self.special_attack or 0)
+            + (self.special_defense or 0)
+        )
+
+    @property
+    def types(self) -> tuple[int, int]:
+        """Return the species' type IDs."""
+        return self.type1, self.type2
+
 
 def read_species_record(rom, game, internal_id: int) -> Species:
     if game.generation == 1:

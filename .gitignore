@@ -34,3 +34,13 @@ Thumbs.db
 
 # Application data
 user_data/
+
+# Pytest
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+test-results.xml
+
+# Linters
+.ruff_cache/

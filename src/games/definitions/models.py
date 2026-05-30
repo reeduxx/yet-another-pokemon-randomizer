@@ -1,7 +1,7 @@
 """Pydantic models for ROM definition files."""
 
 from typing import Any
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
 
 class MetadataDefinitionModel(BaseModel):
@@ -33,19 +33,22 @@ class OffsetsDefinitionModel(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    @field_validator("*", mode="before")
+    @model_validator(mode="before")
     @classmethod
-    def parse_hex_values(cls, value: Any) -> Any:
+    def parse_hex_values(cls, values: Any) -> Any:
         """Convert hexadecimal string values to integers."""
+        if not isinstance(values, dict):
+            return values
+
+        return {key: cls._convert_hex_value(value) for key, value in values.items()}
+
+    @classmethod
+    def _convert_hex_value(cls, value: Any) -> Any:
         if isinstance(value, str) and value.lower().startswith("0x"):
             return int(value, 16)
+
         if isinstance(value, list):
-            return [
-                int(item, 16)
-                if isinstance(item, str) and item.lower().startswith("0x")
-                else item
-                for item in value
-            ]
+            return [cls._convert_hex_value(item) for item in value]
 
         return value
 

@@ -38,7 +38,7 @@ class TypeTrio:
     def display_name(self) -> str:
         """Return the display name for this trio."""
         if self.name:
-            return self.name + "(" + " / ".join(self.type_names) + ")"
+            return self.name
 
         return " / ".join(self.type_names)
 

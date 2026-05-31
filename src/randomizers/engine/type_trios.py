@@ -24,8 +24,10 @@ class TypeTrio:
     name: str = ""
 
     def __post_init__(self) -> None:
+        if len(self.types) != 3:
+            raise ValueError("Type trios must contain exactly 3 types.")
         if len(set(self.types)) != 3:
-            raise ValueError("Type trios must contain exactly 3 unique types.")
+            raise ValueError("Type trios must contain unique types.")
 
     @property
     def type_names(self) -> tuple[str, ...]:
@@ -36,7 +38,7 @@ class TypeTrio:
     def display_name(self) -> str:
         """Return the display name for this trio."""
         if self.name:
-            return self.name
+            return self.name + "(" + " / ".join(self.type_names) + ")"
 
         return " / ".join(self.type_names)
 
@@ -46,7 +48,7 @@ STANDARD_TRIO = TypeTrio(
     types=(GRASS, FIRE, WATER),
 )
 
-TYPE_TRIOS = [
+TYPE_TRIOS = (
     STANDARD_TRIO,
     TypeTrio(types=(FIGHTING, FLYING, ROCK)),
     TypeTrio(types=(FIRE, ROCK, STEEL)),
@@ -62,4 +64,6 @@ TYPE_TRIOS = [
     TypeTrio(types=(GRASS, BUG, ROCK)),
     TypeTrio(types=(ICE, FIGHTING, FLYING)),
     TypeTrio(types=(FIGHTING, PSYCHIC, DARK)),
-]
+)
+
+TYPE_TRIOS_BY_NAME = {trio.display_name: trio for trio in TYPE_TRIOS}

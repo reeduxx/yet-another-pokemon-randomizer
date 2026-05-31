@@ -1,66 +1,58 @@
 import random
 from collections.abc import Iterable
 from src.data.species.base import Species
-from src.data.types import (
-    FIGHTING,
-    FLYING,
-    POISON,
-    GROUND,
-    ROCK,
-    BUG,
-    STEEL,
-    FIRE,
-    WATER,
-    GRASS,
-    ELECTRIC,
-    PSYCHIC,
-    ICE,
-    DARK,
-)
 from src.randomizers.engine.species_filters import (
     exclude_species_ids,
     filter_by_bst,
     filter_by_type,
 )
+from src.randomizers.engine.type_trios import TypeTrio
 
 
-def generate_type_trio_starters(
+def generate_starters_from_trio(
     species: Iterable[Species],
+    trio: TypeTrio,
     rng: random.Random,
     min_bst: int | None = None,
     max_bst: int | None = None,
 ) -> tuple[Species, Species, Species]:
+    """Generate starter Pokémon from the given type trio."""
     species_list = list(species)
-    grass_pool = _build_starter_pool(species_list, GRASS, min_bst, max_bst)
-    fire_pool = _build_starter_pool(species_list, FIRE, min_bst, max_bst)
-    water_pool = _build_starter_pool(species_list, WATER, min_bst, max_bst)
+    selected_starters: list[Species] = []
 
-    if not grass_pool:
-        raise ValueError("No valid Grass-type starter candidates found.")
-    if not fire_pool:
-        raise ValueError("No valid Fire-type starter candidates found.")
-    if not water_pool:
-        raise ValueError("No valid Water-type starter candidates found.")
+    for type_id in trio.types:
+        pool = _build_starter_pool(species_list, type_id, min_bst, max_bst)
+        pool = exclude_species_ids(
+            pool,
+            {mon.internal_id for mon in selected_starters},
+        )
 
-    grass_starter = rng.choice(grass_pool)
-    fire_pool = exclude_species_ids(fire_pool, {grass_starter.internal_id})
+        if not pool:
+            raise ValueError(
+                f"No valid starter candidates found for type ID {type_id} in trio {trio.display_name}."
+            )
 
-    if not fire_pool:
-        raise ValueError("No valid Fire-type starter candidates found.")
+        selected_starters.append(rng.choice(pool))
 
-    fire_starter = rng.choice(fire_pool)
+    rng.shuffle(selected_starters)
 
-    water_pool = exclude_species_ids(
-        water_pool,
-        {grass_starter.internal_id, fire_starter.internal_id},
-    )
+    if len(selected_starters) != 3:
+        raise ValueError("Starter generation must produce exactly 3 starters.")
 
-    if not water_pool:
-        raise ValueError("No valid Water-type starter candidates found.")
+    return selected_starters[0], selected_starters[1], selected_starters[2]
 
-    water_starter = rng.choice(water_pool)
 
-    return grass_starter, fire_starter, water_starter
+def choose_random_type_trio(
+    trios: Iterable[TypeTrio],
+    rng: random.Random,
+) -> TypeTrio:
+    """Return a randomly selected type trio."""
+    trio_list = list(trios)
+
+    if not trio_list:
+        raise ValueError("No type trios were provided.")
+
+    return rng.choice(trio_list)
 
 
 def _build_starter_pool(
@@ -69,6 +61,7 @@ def _build_starter_pool(
     min_bst: int | None = None,
     max_bst: int | None = None,
 ) -> list[Species]:
+    """Build a starter candidate pool for a given type."""
     candidates = filter_by_type(species, type_id)
     candidates = filter_by_bst(candidates, min_bst, max_bst)
 

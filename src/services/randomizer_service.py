@@ -3,6 +3,7 @@ from pathlib import Path
 from src.games import registry
 from src.core.rom import ROM
 from src.core.util import resolve_range
+from src.randomizers.engine.type_trios import TypeTrio
 from src.randomizers.intro import (
     randomize_intro_mon,
     randomize_starting_pc_item,
@@ -23,6 +24,10 @@ class RandomizerSettings:
     starting_money_min: int | None = None
     starting_money_max: int | None = None
     randomize_starters: bool | None = None
+    use_type_trio: bool | None = None
+    type_trio: TypeTrio | None = None
+    starter_bst_min: int | None = None
+    starter_bst_max: int | None = None
     synchronize_rival_starter: bool | None = None
     correct_oak_starter_text: bool | None = None
     seed: int | None = None
@@ -127,6 +132,10 @@ def randomize_rom_file(
             settings.synchronize_rival_starter,
             settings.correct_oak_starter_text,
             settings.seed,
+            use_type_trio=settings.use_type_trio,
+            type_trio=settings.type_trio,
+            min_bst=settings.starter_bst_min,
+            max_bst=settings.starter_bst_max,
         )
 
     final_output = output_path or build_output_path(input_path)

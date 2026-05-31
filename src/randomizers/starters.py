@@ -3,7 +3,13 @@
 import random
 from src.core.rom import ROM
 from src.core.util import read_u8, read_u16_le, write_u8, write_u16_le
+from src.data.species.base import read_species_records
 from src.games.base import GameDefinition
+from src.randomizers.engine.starter_rules import (
+    choose_random_type_trio,
+    generate_starters_from_trio,
+)
+from src.randomizers.engine.type_trios import TYPE_TRIOS, TypeTrio
 
 
 def read_starters(rom: ROM, game: GameDefinition) -> list[int]:
@@ -28,6 +34,10 @@ def randomize_starters(
     synchronize_rival_starter=False,
     correct_oak_starter_text=False,
     seed=None,
+    use_type_trio=False,
+    type_trio: TypeTrio | None = None,
+    min_bst: int | None = None,
+    max_bst: int | None = None,
 ) -> list[int]:
     """Randomize player starter Pokémon.
 
@@ -37,13 +47,34 @@ def randomize_starters(
         synchronize_rival_starter: Whether rival starters should match the randomized choices.
         correct_oak_starter_text: Whether to update starter selection text.
         seed: Optional RNG seed.
+        use_type_trio: Whether to use a valid type trio.
+        type_trio: The type trio to use.
+        min_bst: The minimum base stat total (BST).
+        max_bst: The maximum BST.
 
     Returns:
         Randomized starter species IDs.
     """
     rng = random.Random(seed)
-    species_ids = list(game.get_species_ids())
-    starters = rng.sample(species_ids, 3)
+
+    if use_type_trio:
+        species_records = read_species_records(rom, game)
+
+        if type_trio is None:
+            type_trio = choose_random_type_trio(TYPE_TRIOS, rng)
+
+        starter_species = generate_starters_from_trio(
+            species_records.values(),
+            type_trio,
+            rng,
+            min_bst=min_bst,
+            max_bst=max_bst,
+        )
+
+        starters = [mon.internal_id for mon in starter_species]
+    else:
+        species_ids = list(game.get_species_ids())
+        starters = rng.sample(species_ids, 3)
 
     if game.generation in [1, 2]:
         _write_gen1_starters(rom, game, starters, synchronize_rival_starter)

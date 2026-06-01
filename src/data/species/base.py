@@ -63,7 +63,7 @@ class Species:
 
 def read_species_record(rom, game, internal_id: int) -> Species:
     if game.generation == 1:
-        from gen1 import read_gen1_species_record
+        from src.data.species.gen1 import read_gen1_species_record
 
         return read_gen1_species_record(rom, game, internal_id)
 
@@ -75,7 +75,7 @@ def read_species_record(rom, game, internal_id: int) -> Species:
 def read_species_records(rom, game) -> dict[int, Species]:
     species: dict[int, Species] = {}
 
-    for internal_id in game.get_internal_ids():
+    for internal_id in game.get_species_ids():
         species[internal_id] = read_species_record(rom, game, internal_id)
 
     return species

@@ -2,7 +2,6 @@ from src.core.util import (
     read_pointer,
     write_pointer,
     write_bytes_padded,
-    find_free_space,
 )
 
 GEN1_ENG_ENCODE_MAP = {
@@ -335,6 +334,7 @@ def read_gen3_string_length(data: bytearray, offset: int) -> int:
     raise ValueError(f"Unterminated Gen 3 string at offset 0x{offset:X}")
 
 
+"""
 def write_gen3_text_smart(rom, pointer_offset: int, encoded_text: bytes) -> int:
     original_text_offset = read_pointer(rom.data, pointer_offset)
     original_length = read_gen3_string_length(rom.data, original_text_offset)
@@ -348,8 +348,9 @@ def write_gen3_text_smart(rom, pointer_offset: int, encoded_text: bytes) -> int:
     new_text_offset = write_text_to_free_space(rom, encoded_text)
     write_pointer(rom.data, pointer_offset, new_text_offset)
     return new_text_offset
+"""
 
-
+"""
 def write_text_to_free_space(
     rom, encoded_text: bytes, start_offset: int = 0x700000, fill_byte: int = 0xFF
 ) -> int:
@@ -363,3 +364,4 @@ def write_text_to_free_space(
     rom.data[offset : offset + len(encoded_text)] = encoded_text
 
     return offset
+"""

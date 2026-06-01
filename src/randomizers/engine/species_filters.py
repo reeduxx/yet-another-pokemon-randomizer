@@ -45,3 +45,30 @@ def exclude_species_ids(
         result.append(mon)
 
     return result
+
+
+def exclude_legendary_mythical(
+    species: Iterable[Species],
+    excluded_ids: set[int],
+) -> list[Species]:
+    """Return species excluding legendary and mythical Pokemon."""
+    return exclude_species_ids(species, excluded_ids)
+
+
+def exclude_species_families(
+    species: Iterable[Species],
+    selected_species: Iterable[Species],
+    family_by_species_id: dict[int, set[int]],
+) -> list[Species]:
+    """Return species excluding families already represented by selected species."""
+    excluded_ids: set[int] = set()
+
+    for selected in selected_species:
+        family = family_by_species_id.get(selected.internal_id)
+
+        if family is None:
+            excluded_ids.add(selected.internal_id)
+        else:
+            excluded_ids.update(family)
+
+    return exclude_species_ids(species, excluded_ids)

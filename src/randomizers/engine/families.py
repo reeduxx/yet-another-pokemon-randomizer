@@ -1,0 +1,67 @@
+GEN1_LEGENDARY_MYTHICAL_IDS = {
+    0x4A,  # ARTICUNO
+    0x4B,  # ZAPDOS
+    0x49,  # MOLTRES
+    0x83,  # MEWTWO
+    0x15,  # MEW
+}
+
+GEN1_EVOLUTION_FAMILIES = (
+    {0x99, 0x09, 0x9A},  # BULBASAUR => IVYSAUR => VENUSAUR
+    {0xB0, 0xB2, 0xB4},  # CHARMANDER => CHARMELEON => CHARIZARD
+    {0xB1, 0xB3, 0x1C},  # SQUIRTLE => WARTORTLE => BLASTOISE
+    {0x7B, 0x7C, 0x7D},  # CATERPIE => METAPOD => BUTTERFREE
+    {0x70, 0x71, 0x72},  # WEEDLE => KAKUNA => BEEDRILL
+    {0x24, 0x96, 0x97},  # PIDGEY => PIDGEOTTO => PIDGEOT
+    {0xA5, 0xA6},  # RATTATA => RATICATE
+    {0x05, 0x23},  # SPEAROW => FEAROW
+    {0x6C, 0x2D},  # EKANS => ARBOK
+    {0x54, 0x55},  # PIKACHU => RAICHU
+    {0x60, 0x61},  # SANDSHREW => SANDSLASH
+    {0x0F, 0xA8, 0x10},  # NIDORAN♀ => NIDORINA => NIDOQUEEN
+    {0x03, 0xA7, 0x07},  # NIDORAN♂ => NIDORINO => NIDOKING
+    {0x04, 0x8E},  # CLEFAIRY => CLEFABLE
+    {0x52, 0x53},  # VULPIX => NINETALES
+    {0x64, 0x65},  # JIGGLYPUFF => WIGGLYTUFF
+    {0x6B, 0x82},  # ZUBAT => GOLBAT
+    {0xB9, 0xBA, 0xBB},  # ODDISH => GLOOM => VILEPLUME
+    {0x6D, 0x2E},  # PARAS => PARASECT
+    {0x41, 0x77},  # VENONAT => VENOMOTH
+    {0x3B, 0x76},  # DIGLETT => DUGTRIO
+    {0x4D, 0x90},  # MEOWTH => PERSIAN
+    {0x2F, 0x80},  # PSYDUCK => GOLDUCK
+    {0x39, 0x75},  # MANKEY => PRIMEAPE
+    {0x21, 0x14},  # GROWLITHE => ARCANINE
+    {0x47, 0x6E, 0x6F},  # POLIWAG => POLIWHIRL => POLIWRATH
+    {0x94, 0x26, 0x95},  # ABRA => KADABRA => ALAKAZAM
+    {0x6A, 0x29, 0x7E},  # MACHOP => MACHOKE => MACHAMP
+    {0xBC, 0xBD, 0xBE},  # BELLSPROUT => WEEPINBELL => VICTREEBEL
+    {0x18, 0x9B},  # TENTACOOL => TENTACRUEL
+    {0xA9, 0x27, 0x31},  # GEODUDE => GRAVELER => GOLEM
+    {0xA3, 0xA4},  # PONYTA => RAPIDASH
+    {0x25, 0x08},  # SLOWPOKE => SLOWBRO
+    {0xAD, 0x36},  # MAGNEMITE => MAGNETON
+    {0x46, 0x74},  # DODUO => DODRIO
+    {0x3A, 0x78},  # SEEL => DEWGONG
+    {0x0D, 0x88},  # GRIMER => MUK
+    {0x17, 0x8B},  # SHELLDER => CLOYSTER
+    {0x19, 0x93, 0x0E},  # GASTLY => HAUNTER => GENGAR
+    {0x30, 0x81},  # DROWZEE => HYPNO
+    {0x4E, 0x8A},  # KRABBY => KINGLER
+    {0x06, 0x8D},  # VOLTORB => ELECTRODE
+    {0x0C, 0x0A},  # EXEGGCUTE => EXEGGUTOR
+    {0x11, 0x91},  # CUBONE => MAROWAK
+    {0x37, 0x8F},  # KOFFING => WEEZING
+    {0x12, 0x01},  # RHYHORN => RHYDON
+    {0x5C, 0x5D},  # HORSEA => SEADRA
+    {0x9D, 0x9E},  # GOLDEEN => SEAKING
+    {0x1B, 0x98},  # STARYU => STARMIE
+    {0x85, 0x16},  # MAGIKARP => GYARADOS
+    {0x62, 0x63},  # OMANYTE => OMASTAR
+    {0x5A, 0x5B},  # KABUTO => KABUTOPS
+    {0x58, 0x59, 0x42},  # DRATINI => DRAGONAIR => DRAGONITE
+)
+
+GEN1_FAMILY_BY_SPECIES_ID = {
+    species_id: family for family in GEN1_EVOLUTION_FAMILIES for species_id in family
+}

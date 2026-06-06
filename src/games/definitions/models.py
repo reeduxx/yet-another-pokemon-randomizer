@@ -44,13 +44,21 @@ class OffsetsDefinitionModel(BaseModel):
 
     @classmethod
     def _convert_hex_value(cls, value: Any) -> Any:
+        if value is None:
+            return value
+
         if isinstance(value, str) and value.lower().startswith("0x"):
             return int(value, 16)
+
+        if isinstance(value, int):
+            return value
 
         if isinstance(value, list):
             return [cls._convert_hex_value(item) for item in value]
 
-        return value
+        raise ValueError(
+            "Offset values must be integers, hexadecimal strings, lists, or null."
+        )
 
 
 class GameDefinitionModel(BaseModel):

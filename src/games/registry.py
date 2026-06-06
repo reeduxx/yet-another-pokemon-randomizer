@@ -2,6 +2,7 @@
 
 from pathlib import Path
 from src.games.base import GameDefinition, ROMMetadata
+from src.games.definitions.database.manager import GameDefinitionDatabase
 from src.games.definitions.factory import DefinitionFactory
 from src.games.definitions.loader import DefinitionLoader
 
@@ -29,7 +30,11 @@ class GameRegistry:
         if user_directory is not None and Path(user_directory).exists():
             definitions.extend(self.loader.load_directory(user_directory))
 
-        self.games = [self.factory.create(definition) for definition in definitions]
+        database = GameDefinitionDatabase(":memory:")
+        database.init()
+        database.import_definitions(definitions)
+        db_definitions = database.get_all_definitions()
+        self.games = [self.factory.create(definition) for definition in db_definitions]
 
     def detect_game(self, metadata: ROMMetadata) -> GameDefinition | None:
         """Detect the game matching the provided ROM metadata.
